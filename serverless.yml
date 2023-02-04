@@ -1,0 +1,24 @@
+service: powertools-disable-tracing-error-poc
+frameworkVersion: '3'
+functions:
+  lambda_handler:
+    environment:
+      LOG_LEVEL: DEBUG
+      POWERTOOLS_LOGGER_LOG_EVENT: true
+      POWERTOOLS_METRICS_NAMESPACE: powertools-disable-tracing-error-poc-metrics
+      POWERTOOLS_SERVICE_NAME: powertools-disable-tracing-error-poc
+      POWERTOOLS_TRACE_DISABLED: true
+      POWERTOOLS_DEBUG: true
+    events:
+      - httpApi: '*'
+    handler: src.main.lambda_handler
+    layers:
+      - arn:aws:lambda:${aws:region}:017000801446:layer:AWSLambdaPowertoolsPythonV2:20
+provider:
+  name: aws
+  memorySize: 512
+  region: 'eu-central-1'
+  runtime: python3.9
+  stage: dev
+  tracing:
+    lambda: true
